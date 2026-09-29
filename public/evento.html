@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comprar entradas · Tiketek</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/fonts/inter/index.css" />
+  <link rel="stylesheet" href="/fonts/syne/index.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="has-buybar">
+  <header class="topbar"><a class="logo" href="/">tiketek<span>.</span></a><a class="back" href="/">← Eventos</a></header>
+  <main class="container narrow" id="event">
+    <p class="empty">Cargando evento…</p>
+  </main>
+
+  <div class="buybar" id="buybar" hidden>
+    <div>
+      <small id="buy-count">0 entradas</small>
+      <strong id="buy-total">0,00 €</strong>
+      <small id="buy-entries"></small>
+      <small id="buy-monthly"></small>
+    </div>
+    <button class="btn primary" id="buy-button" disabled>Comprar</button>
+  </div>
+  <p class="toast" id="error" role="alert" hidden></p>
+
+  <footer class="footer">
+    <nav class="legal-links"><a href="/legal/condiciones">Condiciones de compra</a><a href="/legal/privacidad">Privacidad</a><a href="/legal/aviso-legal">Aviso legal</a></nav>
+    <p>© Tiketek · Pagos seguros con Stripe</p>
+  </footer>
+
+  <script type="module" src="/js/evento.js"></script>
+</body>
+</html>

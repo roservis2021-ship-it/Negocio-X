@@ -1,0 +1,31 @@
+# Despliegue en Render (Blueprint). Los datos viven en Firestore, así que no hace falta disco.
+# Plan starter (de pago) para que el servidor no se duerma: en el plan gratuito se apaga
+# sin tráfico y la primera compra tardaría casi un minuto en cargar.
+services:
+  - type: web
+    name: tiketek
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "24"
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false
+      - key: TICKET_SECRET
+        generateValue: true
+      - key: PUBLIC_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false

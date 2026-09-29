@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tiketek · Entradas para fiestas y eventos</title>
+  <meta name="description" content="Compra entradas para fiestas y eventos en segundos." />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/fonts/inter/index.css" />
+  <link rel="stylesheet" href="/fonts/syne/index.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar"><a class="logo" href="/">tiketek<span>.</span></a></header>
+  <main class="container">
+    <section class="hero">
+      <h1>Tu próxima <span class="psychedelic-word">fiesta</span>,<br />a dos clics.</h1>
+      <p>Elige evento, pilla tu entrada y listo.</p>
+    </section>
+    <div id="events" class="grid" aria-live="polite">
+      <div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>
+    </div>
+  </main>
+  <footer class="footer">
+    <nav class="legal-links"><a href="/legal/condiciones">Condiciones de compra</a><a href="/legal/privacidad">Privacidad</a><a href="/legal/aviso-legal">Aviso legal</a></nav>
+    <p>© Tiketek · Pagos seguros con Stripe</p>
+  </footer>
+
+  <script type="module" src="/js/home.js"></script>
+</body>
+</html>

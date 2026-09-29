@@ -1,0 +1,48 @@
+[
+  {
+    "id": "university-halloween-xl",
+    "title": "University Halloween XL 2026",
+    "published": true,
+    "saleEnabled": true,
+    "monthlyPrice": 11200,
+    "subscriptionBenefits": "Reserva permanente de entradas. Hasta 15 entradas VIP al mes para cualquier evento con un 45 % de descuento. Código de descuento exclusivo y descuento adicional por compartir eventos y generar ventas de entradas a terceros. Estos beneficios se gestionan manualmente cada mes por el organizador.",
+    "date": "2026-10-31T22:00:00+00:00",
+    "venue": "Anexo C.C. Las Terrazas",
+    "city": "Gran Canaria",
+    "description": "Halloween XL en Gran Canaria con 3 ambientes, cementerio viviente, zona influencer, juegos, food trucks y espectáculo.\n\n31 de octubre de 2026, de 22:00 a 04:00 del 1 de noviembre. Solo mayores de 18 años.\n\nHay entradas General, VIP Front Stage y SuperVIP, con distintos accesos. La barra libre está incluida solo en las modalidades que indique el organizador. Algunas categorías SuperVIP requieren tener 21 o 23 años, según la modalidad.",
+    "colors": ["#ff7a00", "#7a2cff"],
+    "image": "/images/univerity-halloween-xl.jpeg",
+    "tickets": [
+      {
+        "id": "general",
+        "name": "General",
+        "description": "Acceso al evento",
+        "price": 3500,
+        "capacity": 120
+      }
+    ]
+  },
+  {
+    "id": "row-tenerife-2026",
+    "title": "ROW Tenerife XXL 2026",
+    "published": true,
+    "saleEnabled": true,
+    "monthlyPrice": 11200,
+    "subscriptionBenefits": "Reserva permanente de entradas. Hasta 15 entradas VIP al mes para cualquier evento con un 45 % de descuento. Código de descuento exclusivo y descuento adicional por compartir eventos y generar ventas de entradas a terceros. Estos beneficios se gestionan manualmente cada mes por el organizador.",
+    "date": "2026-10-10",
+    "venue": "Campo de Golf Costa Adeje",
+    "city": "Tenerife",
+    "description": "Prepárate para entrar en un mundo donde la música, el color y la locura se mezclan en una experiencia única. ELROW llega a Tenerife con una edición XXL cargada de electrónica, escenarios espectaculares, performers, confeti y una producción diseñada para sorprenderte a cada momento.\n\nDurante 9 horas de fiesta, miles de personas se reunirán en el Campo de Golf Costa Adeje para disfrutar de dos escenarios y dos ambientes diferentes, con el universo inconfundible de ELROW como protagonista.\n\nNo es solo un festival. Es entrar en otro mundo durante una noche.",
+    "colors": ["#00b3a4", "#1b2060"],
+    "image": "/images/row-tenerife-2026.jpeg",
+    "tickets": [
+      {
+        "id": "general",
+        "name": "Entrada",
+        "description": "Acceso al evento",
+        "price": 6000,
+        "capacity": 120
+      }
+    ]
+  }
+]

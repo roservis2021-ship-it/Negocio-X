@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Nadie accede a Firestore desde el navegador: todo pasa por el servidor de Tiketek,
+    // que usa el Admin SDK (las reglas no le afectan). Así los pedidos y el aforo
+    // no se pueden leer ni manipular desde fuera.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

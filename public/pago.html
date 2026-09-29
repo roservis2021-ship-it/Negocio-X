@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pago · Tiketek</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/fonts/inter/index.css" />
+  <link rel="stylesheet" href="/fonts/syne/index.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="/">tiketek<span>.</span></a>
+    <span class="secure-badge">🔒 Pago seguro</span>
+  </header>
+
+  <main class="container checkout" id="checkout">
+    <p class="empty">Cargando pedido…</p>
+  </main>
+
+  <template id="checkout-template">
+    <aside class="checkout-summary">
+      <div class="summary-cover" data-cover><span class="cover-title" data-title></span></div>
+      <p class="date" data-date></p>
+      <h1 class="summary-event" data-title></h1>
+      <p class="muted" data-venue></p>
+      <div data-lines></div>
+    </aside>
+
+    <form class="checkout-form" id="payment-form" novalidate>
+      <h2 class="form-title">Datos de pago</h2>
+      <p class="reservation" data-reservation>Tus entradas están reservadas durante <strong data-countdown>15:00</strong></p>
+
+      <label class="field">
+        <span>Email</span>
+        <input id="email" type="email" autocomplete="email" inputmode="email" required placeholder="tu@email.com" />
+        <small>Aquí te enviaremos las entradas.</small>
+      </label>
+
+      <div class="field">
+        <span>Método de pago</span>
+        <div class="subscription-checkout-note">El pago seguro se completa en Stripe. Hoy se cobra solo el importe de las entradas. El método de pago se guardará de forma segura para cobrar la primera cuota de suscripción dentro de un mes y, después, cada mes.</div>
+      </div>
+
+      <label class="check">
+        <input id="accept-terms" type="checkbox" required />
+        <span>Acepto las <a href="/legal/condiciones" target="_blank">condiciones de compra y suscripción</a> y la <a href="/legal/privacidad" target="_blank">política de privacidad</a>. Confirmo que hoy pagaré solo las entradas y autorizo el primer cobro de <strong data-monthly-consent></strong> dentro de un mes, con renovación mensual hasta cancelar. Entiendo que las entradas corresponden a una fecha concreta.</span>
+      </label>
+
+      <p class="form-error" id="payment-error" role="alert" hidden></p>
+
+      <button class="btn primary wide pay-button" id="pay-button" type="submit" disabled>
+        <span class="spinner" aria-hidden="true"></span><span data-pay-label>Pagar</span>
+      </button>
+      <p class="subscription-next" data-monthly-label></p>
+
+      <p class="powered">🔒 Pago cifrado · Procesado por <strong>Stripe</strong></p>
+      <a class="btn ghost wide" data-cancel>Volver al evento</a>
+    </form>
+  </template>
+
+  <footer class="footer">
+    <nav class="legal-links"><a href="/legal/condiciones">Condiciones de compra</a><a href="/legal/privacidad">Privacidad</a><a href="/legal/aviso-legal">Aviso legal</a></nav>
+    <p>© Tiketek · Pagos seguros con Stripe</p>
+  </footer>
+
+  <script type="module" src="/js/pago.js"></script>
+</body>
+</html>
