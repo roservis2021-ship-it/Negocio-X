@@ -33,7 +33,7 @@ Flujo: **elegir evento → elegir entradas → pago → confirmación**.
 
 ## Variables de entorno
 
-Ver `.env.example`. Obligatorias: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `TICKET_SECRET` y credenciales de Firestore. Para producción también se exige `RESEND_API_KEY`.
+Ver `.env.example`. Obligatorias: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `TICKET_SECRET` y credenciales de Firestore. Para producción con ventas activas también se exige `RESEND_API_KEY`. Usa `SALES_ENABLED=false` durante el despliegue inicial hasta configurar el webhook y el correo.
 
 ## Desplegar en Render
 

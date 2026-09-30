@@ -26,6 +26,7 @@ if (!env.FIREBASE_SERVICE_ACCOUNT && !env.GOOGLE_APPLICATION_CREDENTIALS && !env
 const liveSecret = /^(sk|rk)_live_/.test(env.STRIPE_SECRET_KEY);
 
 const IS_PROD = env.NODE_ENV === 'production';
+const SALES_ENABLED = env.SALES_ENABLED !== 'false';
 const PORT = Number(env.PORT) || 3000;
 const PUBLIC_URL = (env.PUBLIC_URL || `http://localhost:${PORT}`).replace(/\/$/, '');
 const RESERVATION_MINUTES = Math.max(35, Number(env.RESERVATION_MINUTES) || 35);
@@ -33,7 +34,7 @@ const MAX_TICKETS_PER_ORDER = 10;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const path = (p) => fileURLToPath(new URL(p, import.meta.url));
 
-if (IS_PROD && !env.RESEND_API_KEY) {
+if (IS_PROD && SALES_ENABLED && !env.RESEND_API_KEY) {
   console.error('En producción hace falta RESEND_API_KEY para enviar las entradas por email.');
   process.exit(1);
 }
@@ -135,14 +136,14 @@ function eventView(e, taken, withDetails = false) {
     title: e.title,
     monthlyPrice: e.monthlyPrice,
     subscriptionBenefits: e.subscriptionBenefits,
-    saleEnabled: e.saleEnabled === true,
+    saleEnabled: SALES_ENABLED && e.saleEnabled === true,
     date: e.date,
     venue: e.venue,
     city: e.city,
     colors: e.colors,
     image: e.image || null,
     fromPrice: available.length ? Math.min(...available.map((t) => t.price)) : null,
-    soldOut: e.saleEnabled === true && available.length === 0,
+    soldOut: SALES_ENABLED && e.saleEnabled === true && available.length === 0,
   };
   return withDetails ? { ...view, description: e.description, tickets } : view;
 }
@@ -316,6 +317,7 @@ app.get('/api/events/:id', async (req, res) => {
 
 // Crea el pedido y reserva las entradas durante RESERVATION_MINUTES.
 app.post('/api/checkout', strictLimit, async (req, res) => {
+  if (!SALES_ENABLED) return res.status(503).json({ error: 'Las ventas todavía no están activas.' });
   const e = findEvent(req.body?.eventId);
   if (!e) return res.status(404).json({ error: 'Evento no encontrado' });
   if (!isOnSale(e)) return res.status(410).json({ error: 'Este evento ya no está a la venta' });
@@ -383,6 +385,7 @@ app.get('/api/orders/:id', async (req, res) => {
 
 // Crea una sesión Stripe: entradas con cargo único + cuota mensual recurrente.
 app.post('/api/orders/:id/checkout-session', strictLimit, async (req, res) => {
+  if (!SALES_ENABLED) return res.status(503).json({ error: 'Las ventas todavía no están activas.' });
   const order = await payableOrder(req);
   if (!order.email || !order.termsVersion) throw new HttpError(400, 'Confirma tu email y acepta las condiciones antes de pagar');
   const checkout = await billing.checkoutFor(order, findEvent(order.eventId), PUBLIC_URL);

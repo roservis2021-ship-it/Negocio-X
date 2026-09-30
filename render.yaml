@@ -3,7 +3,7 @@
 # sin tráfico y la primera compra tardaría casi un minuto en cargar.
 services:
   - type: web
-    name: tiketek
+    name: tiketek-negociox
     runtime: node
     plan: starter
     region: frankfurt
@@ -15,17 +15,15 @@ services:
         value: production
       - key: NODE_VERSION
         value: "24"
+      - key: SALES_ENABLED
+        value: "false"
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
-        sync: false
+        generateValue: true
       - key: FIREBASE_SERVICE_ACCOUNT
         sync: false
       - key: TICKET_SECRET
         generateValue: true
       - key: PUBLIC_URL
-        sync: false
-      - key: RESEND_API_KEY
-        sync: false
-      - key: EMAIL_FROM
-        sync: false
+        value: https://tiketek-negociox.onrender.com
