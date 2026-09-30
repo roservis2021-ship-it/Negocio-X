@@ -24,15 +24,20 @@ function parseServiceAccount(raw) {
 const env = process.env;
 const publicUrl = env.PUBLIC_URL || '';
 const serviceAccount = parseServiceAccount(env.FIREBASE_SERVICE_ACCOUNT);
+const salesEnabled = env.SALES_ENABLED !== 'false';
 
 requireCheck(env.NODE_ENV === 'production', 'NODE_ENV debe ser production.');
 requireCheck(/^https:\/\//.test(publicUrl) && !/localhost|127\.0\.0\.1/i.test(publicUrl), 'PUBLIC_URL debe ser la URL HTTPS pública.');
 requireCheck(/^(sk|rk)_live_/.test(env.STRIPE_SECRET_KEY || ''), 'STRIPE_SECRET_KEY debe ser una clave live.');
-requireCheck(/^whsec_/.test(env.STRIPE_WEBHOOK_SECRET || ''), 'STRIPE_WEBHOOK_SECRET debe contener el secreto del webhook de producción.');
 requireCheck((env.TICKET_SECRET || '').length >= 32, 'TICKET_SECRET debe tener al menos 32 caracteres aleatorios.');
 requireCheck(Boolean(serviceAccount?.project_id && serviceAccount?.client_email && serviceAccount?.private_key), 'FIREBASE_SERVICE_ACCOUNT no es una cuenta de servicio válida.');
-requireCheck(/^re_/.test(env.RESEND_API_KEY || ''), 'RESEND_API_KEY debe estar configurada.');
-requireCheck(/^[^<>\s]+@[^<>\s]+\.[^<>\s]+/.test(env.EMAIL_FROM || '') || /<[^<>\s]+@[^<>\s]+\.[^<>\s]+>/.test(env.EMAIL_FROM || ''), 'EMAIL_FROM debe contener una dirección válida del dominio verificado.');
+if (salesEnabled) {
+  requireCheck(/^whsec_/.test(env.STRIPE_WEBHOOK_SECRET || ''), 'STRIPE_WEBHOOK_SECRET debe contener el secreto del webhook de producción.');
+  requireCheck(/^re_/.test(env.RESEND_API_KEY || ''), 'RESEND_API_KEY debe estar configurada.');
+  requireCheck(/^[^<>\s]+@[^<>\s]+\.[^<>\s]+/.test(env.EMAIL_FROM || '') || /<[^<>\s]+@[^<>\s]+\.[^<>\s]+>/.test(env.EMAIL_FROM || ''), 'EMAIL_FROM debe contener una dirección válida del dominio verificado.');
+} else {
+  warnings.push('SALES_ENABLED=false: el sitio se validará con las ventas desactivadas.');
+}
 
 for (const name of ['condiciones.html', 'privacidad.html', 'aviso-legal.html']) {
   const contents = readFileSync(root(`public/legal/${name}`), 'utf8');
