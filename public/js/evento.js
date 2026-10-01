@@ -74,9 +74,9 @@ function updateBuybar() {
   const count = totalCount();
   const total = event.tickets.reduce((sum, t) => sum + (qty[t.id] || 0) * t.price, 0);
   document.getElementById('buy-count').textContent = `${count} ${count === 1 ? 'entrada' : 'entradas'}`;
-  document.getElementById('buy-total').textContent = `Total ${euros(total)}`;
-  document.getElementById('buy-entries').textContent = count ? `Pago único: ${euros(total)}` : '';
-  document.getElementById('buy-monthly').textContent = '';
+  document.getElementById('buy-total').textContent = `Hoy ${euros(total)}`;
+  document.getElementById('buy-entries').textContent = count ? `Entradas: ${euros(total)}` : '';
+  document.getElementById('buy-monthly').textContent = count ? `Suscripción: ${euros(event.monthlyPrice)}/mes · primer cobro el próximo día 2` : '';
   buyButton.disabled = count === 0;
 }
 

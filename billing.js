@@ -1,5 +1,5 @@
-// Cobra las entradas ahora y programa la primera cuota mensual para un mes
-// después del pago, usando el método guardado con autorización para futuros cargos.
+// Cobra las entradas ahora y programa la primera cuota mensual para el próximo
+// día 2 disponible, usando el método guardado con autorización para futuros cargos.
 export function createBilling(stripe) {
   async function checkoutFor(order, event, publicUrl) {
     if (order.checkoutSessionId) {
@@ -50,7 +50,7 @@ export function createBilling(stripe) {
     if (!paymentMethodId) throw new Error('No se pudo guardar el método de pago para la suscripción.');
 
     const paidAt = new Date((session.created || Math.floor(Date.now() / 1000)) * 1000);
-    const firstChargeAt = addCalendarMonth(paidAt);
+    const firstChargeAt = nextMonthlyBillingDay(paidAt, 2);
     const subscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [{ price_data: {
@@ -100,12 +100,10 @@ export function createBilling(stripe) {
   return { checkoutFor, checkPaid, expirePending, portalFor };
 }
 
-function addCalendarMonth(date) {
-  const result = new Date(date);
-  const day = result.getUTCDate();
-  result.setUTCDate(1);
-  result.setUTCMonth(result.getUTCMonth() + 1);
-  const lastDay = new Date(Date.UTC(result.getUTCFullYear(), result.getUTCMonth() + 1, 0)).getUTCDate();
-  result.setUTCDate(Math.min(day, lastDay));
-  return result;
+function nextMonthlyBillingDay(date, day) {
+  const next = new Date(date);
+  next.setUTCDate(1);
+  next.setUTCDate(day);
+  if (next <= date) next.setUTCMonth(next.getUTCMonth() + 1);
+  return next;
 }

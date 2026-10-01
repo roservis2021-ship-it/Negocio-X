@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Información sobre pagos · Tiketek</title>
+  <title>Gestionar suscripción · Tiketek</title>
   <link rel="icon" href="/icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/fonts/inter/index.css" />
   <link rel="stylesheet" href="/fonts/syne/index.css" />
@@ -12,12 +12,16 @@
 <body>
   <header class="topbar"><a class="logo" href="/">tiketek<span>.</span></a><a class="back" href="/">← Eventos</a></header>
   <main class="container narrow">
-    <section class="panel subscription-manage">
-      <h1 class="panel-title">No hay ninguna suscripción que gestionar</h1>
-      <p class="muted">Las entradas se adquieren mediante un pago único. No se cobran cuotas posteriores ni existen renovaciones automáticas.</p>
-      <a class="btn primary wide" href="/">Ver eventos</a>
-    </section>
+    <form class="panel subscription-manage" id="manage-form">
+      <h1 class="panel-title">Gestiona tu suscripción</h1>
+      <p class="muted">Escribe el mismo email que usaste al comprar. Te llevaremos al portal seguro de Stripe para cambiar tu método de pago o cancelar futuras renovaciones.</p>
+      <label class="field"><span>Número de pedido</span><input id="order-id" required autocomplete="off" /></label>
+      <label class="field"><span>Email de compra</span><input id="customer-email" type="email" required autocomplete="email" placeholder="tu@email.com" /></label>
+      <p class="form-error" id="manage-error" role="alert" hidden></p>
+      <button class="btn primary wide" id="manage-button" type="submit">Continuar a Stripe</button>
+    </form>
   </main>
   <footer class="footer"><nav class="legal-links"><a href="/legal/condiciones">Condiciones de compra</a><a href="/legal/privacidad">Privacidad</a><a href="/legal/aviso-legal">Aviso legal</a></nav><p>© Tiketek · Pagos seguros con Stripe</p></footer>
+  <script type="module" src="/js/suscripcion.js"></script>
 </body>
 </html>
