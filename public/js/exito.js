@@ -33,7 +33,7 @@ function renderPaid(order) {
     <p class="order-code">Pedido <strong>${esc(order.code)}</strong></p>
     <p class="sent-to">📩 Te hemos enviado las entradas con sus códigos QR a <strong>${esc(order.email)}</strong>. Revisa también la carpeta de spam.</p>
     ${orderSummary(order)}
-    <p class="subscription-manage-note">Tu suscripción de ${esc(new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(order.monthlyTotal / 100))} al mes está programada: el primer cobro será dentro de un mes y después cada mes. <a href="/suscripcion?order=${encodeURIComponent(order.id)}">Gestionar o cancelar suscripción</a>.</p>
+    <p class="subscription-manage-note">Pago completado. Esta compra es un pago único y no genera cuotas ni renovaciones automáticas.</p>
     <a class="btn primary wide" href="/">Ver más eventos</a>`;
 }
 

@@ -31,9 +31,8 @@ async function render(order) {
   root.querySelector('[data-date]').textContent = fecha(order.event.date);
   root.querySelector('[data-venue]').textContent = `${order.event.venue} · ${order.event.city}`;
   root.querySelector('[data-lines]').innerHTML = orderSummary(order);
-  root.querySelector('[data-pay-label]').textContent = `Pagar ${euros(order.total)} hoy`;
-  root.querySelector('[data-monthly-label]').textContent = `Primer cobro de ${euros(order.monthlyTotal)} dentro de un mes; después, cada mes hasta cancelar.`;
-  root.querySelector('[data-monthly-consent]').textContent = euros(order.monthlyTotal);
+  root.querySelector('[data-pay-label]').textContent = `Pagar ${euros(order.total)}`;
+  root.querySelector('[data-monthly-label]').textContent = 'Pago único · Sin cuotas ni renovaciones';
   root.querySelector('[data-cancel]').href = `/evento?id=${encodeURIComponent(order.event.id)}`;
 
   const form = document.getElementById('payment-form');

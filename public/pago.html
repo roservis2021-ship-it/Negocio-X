@@ -40,12 +40,12 @@
 
       <div class="field">
         <span>Método de pago</span>
-        <div class="subscription-checkout-note">El pago seguro se completa en Stripe. Hoy se cobra solo el importe de las entradas. El método de pago se guardará de forma segura para cobrar la primera cuota de suscripción dentro de un mes y, después, cada mes.</div>
+        <div class="subscription-checkout-note">El pago seguro se completa en Stripe. Se cobrará una sola vez el importe total de las entradas seleccionadas, sin cuotas posteriores ni renovación automática.</div>
       </div>
 
       <label class="check">
         <input id="accept-terms" type="checkbox" required />
-        <span>Acepto las <a href="/legal/condiciones" target="_blank">condiciones de compra y suscripción</a> y la <a href="/legal/privacidad" target="_blank">política de privacidad</a>. Confirmo que hoy pagaré solo las entradas y autorizo el primer cobro de <strong data-monthly-consent></strong> dentro de un mes, con renovación mensual hasta cancelar. Entiendo que las entradas corresponden a una fecha concreta.</span>
+        <span>Acepto las <a href="/legal/condiciones" target="_blank">condiciones de compra</a> y la <a href="/legal/privacidad" target="_blank">política de privacidad</a>. Confirmo el pago único del importe indicado y entiendo que las entradas corresponden a una fecha concreta.</span>
       </label>
 
       <p class="form-error" id="payment-error" role="alert" hidden></p>
@@ -53,7 +53,7 @@
       <button class="btn primary wide pay-button" id="pay-button" type="submit" disabled>
         <span class="spinner" aria-hidden="true"></span><span data-pay-label>Pagar</span>
       </button>
-      <p class="subscription-next" data-monthly-label></p>
+      <p class="subscription-next" data-monthly-label>Pago único · Sin cuotas ni renovaciones</p>
 
       <p class="powered">🔒 Pago cifrado · Procesado por <strong>Stripe</strong></p>
       <a class="btn ghost wide" data-cancel>Volver al evento</a>
