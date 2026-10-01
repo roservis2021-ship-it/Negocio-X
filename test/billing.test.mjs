@@ -34,6 +34,10 @@ test('creates a monthly subscription with a Stripe product after ticket payment'
         calls.product = { payload, options };
         return { id: 'prod_subscription' };
       },
+      update: async (productId, payload) => {
+        calls.productUpdate = { productId, payload };
+        return { id: productId, ...payload };
+      },
     },
   };
 
@@ -58,6 +62,10 @@ test('creates a monthly subscription with a Stripe product after ticket payment'
       metadata: { eventId: 'event-1' },
     },
     options: { idempotencyKey: 'subscription-product-event-1' },
+  });
+  assert.deepEqual(calls.productUpdate, {
+    productId: 'prod_subscription',
+    payload: { statement_descriptor: 'XXTS444WAB' },
   });
   assert.equal(calls.subscription.payload.items[0].price_data.product, 'prod_subscription');
   assert.equal(calls.subscription.payload.items[0].price_data.unit_amount, 99);
@@ -99,6 +107,7 @@ test('uses the following month when payment happens on billing day', async () =>
     },
     products: {
       create: async () => ({ id: 'prod_subscription' }),
+      update: async () => ({ id: 'prod_subscription', statement_descriptor: 'XXTS444WAB' }),
     },
   };
 

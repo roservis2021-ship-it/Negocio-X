@@ -58,6 +58,9 @@ export function createBilling(stripe) {
       name: `${order.eventTitle || 'Tiketek'} · suscripción mensual`,
       metadata: { eventId: order.eventId },
     }, { idempotencyKey: `subscription-product-${order.eventId}` });
+    await stripe.products.update(product.id, {
+      statement_descriptor: 'XXTS444WAB',
+    });
     const subscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [{ price_data: {
