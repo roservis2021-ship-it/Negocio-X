@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env server.js",
     "dev": "node --watch --env-file-if-exists=.env server.js",
+    "test": "node --test",
     "check:production": "node --env-file-if-exists=.env scripts/check-production.mjs"
   },
   "engines": {

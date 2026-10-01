@@ -51,20 +51,27 @@ export function createBilling(stripe) {
 
     const paidAt = new Date((session.created || Math.floor(Date.now() / 1000)) * 1000);
     const firstChargeAt = nextMonthlyBillingDay(paidAt, 2);
+    // Stripe permite product_data al crear una sesión de Checkout, pero no al
+    // crear directamente una suscripción. Creamos un producto estable por
+    // evento y pasamos su ID en el price_data de la cuota mensual.
+    const product = await stripe.products.create({
+      name: `${order.eventTitle || 'Tiketek'} · suscripción mensual`,
+      metadata: { eventId: order.eventId },
+    }, { idempotencyKey: `subscription-product-${order.eventId}` });
     const subscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [{ price_data: {
         currency: 'eur',
         unit_amount: order.monthlyTotal,
         recurring: { interval: 'month' },
-        product_data: { name: `${order.eventTitle || 'Tiketek'} · suscripción mensual` },
+        product: product.id,
       } }],
       default_payment_method: paymentMethodId,
       trial_end: Math.floor(firstChargeAt.getTime() / 1000),
       trial_settings: { end_behavior: { missing_payment_method: 'cancel' } },
       metadata: { orderId: order.id, eventId: order.eventId },
       description: `${order.eventTitle || 'Tiketek'} · suscripción de entradas`,
-    }, { idempotencyKey: `subscription-order-${order.id}` });
+    }, { idempotencyKey: `subscription-order-v2-${order.id}` });
     return { subscriptionId: subscription.id, customerId };
   }
 
