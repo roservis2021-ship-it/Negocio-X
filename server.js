@@ -180,8 +180,8 @@ async function markPaid(orderId, email, subscriptionId, customerId) {
 // Envía las entradas por email. Si falla, el pedido queda
 // con emailStatus "pending" y el proceso periódico lo reintenta.
 async function sendOrderEmail(orderId) {
-  const order = await db.getOrder(orderId);
-  if (!order || order.emailStatus !== 'pending' || !order.email) return;
+  const order = await db.claimEmail(orderId);
+  if (!order) return;
   try {
     const tickets = await db.getTickets(orderId);
     await mailer.send(await ticketsEmail({

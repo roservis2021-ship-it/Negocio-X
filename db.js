@@ -55,6 +55,7 @@ export function openDb() {
       termsVersion: d.termsVersion ?? null,
       emailStatus: d.emailStatus ?? null,
       emailAttempts: d.emailAttempts ?? 0,
+      emailAttemptStartedAt: iso(d.emailAttemptStartedAt),
       createdAt: iso(d.createdAt),
       expiresAt: iso(d.expiresAt),
       paidAt: iso(d.paidAt),
@@ -126,7 +127,9 @@ export function openDb() {
         if (order.status === 'expired') {
           tx.set(stock.doc(order.eventId), takenUpdate(order.items, 1), { merge: true });
         }
-        const holder = order.email ?? email;
+        // El email confirmado por Stripe es la fuente de verdad. Así evitamos
+        // enviar las entradas a una dirección antigua escrita antes del pago.
+        const holder = email ?? order.email;
         let n = 0;
         const count = order.items.reduce((s, i) => s + i.qty, 0);
         for (const item of order.items) {
@@ -150,7 +153,7 @@ export function openDb() {
           emailStatus: 'pending',
           ...(stripeSubscriptionId ? { stripeSubscriptionId } : {}),
           ...(stripeCustomerId ? { stripeCustomerId } : {}),
-          ...(order.email ? {} : { email }),
+          ...(holder ? { email: holder } : {}),
         });
         return order.status;
       });
@@ -181,14 +184,43 @@ export function openDb() {
     },
 
     async ordersPendingEmail() {
-      const snap = await orders.where('emailStatus', '==', 'pending').get();
+      const snap = await orders.where('emailStatus', 'in', ['pending', 'sending']).get();
       return snap.docs.map(toOrder);
+    },
+
+    // Reserva el envío de forma atómica. Puede haber dos procesos (webhook,
+    // sincronización o tarea periódica) intentando enviar el mismo pedido.
+    // Solo uno obtiene la reserva; una reserva abandonada se recupera a los
+    // diez minutos para no dejar el correo bloqueado tras un reinicio.
+    claimEmail(id, staleBefore = new Date(Date.now() - 10 * 60_000)) {
+      const ref = orders.doc(id);
+      return db.runTransaction(async (tx) => {
+        const order = toOrder(await tx.get(ref));
+        if (!order || !order.email) return null;
+        const retryStaleSending = order.emailStatus === 'sending'
+          && order.emailAttemptStartedAt
+          && new Date(order.emailAttemptStartedAt) <= staleBefore;
+        if (order.emailStatus !== 'pending' && !retryStaleSending) return null;
+        tx.update(ref, {
+          emailStatus: 'sending',
+          emailAttemptStartedAt: FieldValue.serverTimestamp(),
+        });
+        return order;
+      });
     },
 
     markEmail(id, sent) {
       return orders.doc(id).update(sent
-        ? { emailStatus: 'sent', emailSentAt: FieldValue.serverTimestamp() }
-        : { emailAttempts: FieldValue.increment(1) });
+        ? {
+            emailStatus: 'sent',
+            emailSentAt: FieldValue.serverTimestamp(),
+            emailAttemptStartedAt: FieldValue.delete(),
+          }
+        : {
+            emailStatus: 'pending',
+            emailAttempts: FieldValue.increment(1),
+            emailAttemptStartedAt: FieldValue.delete(),
+          });
     },
   };
 }

@@ -55,6 +55,9 @@ export async function ticketsEmail({ order, event, tickets, secret, publicUrl })
 
   const lines = order.items.map((i) => `
     <tr><td style="padding:6px 0">${i.qty} × ${esc(i.name)}</td><td align="right" style="padding:6px 0">${euros(i.unitPrice * i.qty)}</td></tr>`).join('');
+  const paymentNote = order.monthlyTotal > 0
+    ? `Este cobro corresponde a las entradas. Tu suscripción mensual de <b>${euros(order.monthlyTotal)}</b> se gestiona por separado y se renueva automáticamente hasta que la canceles.`
+    : 'Este importe corresponde a un pago único. No hay cuotas posteriores ni renovación automática.';
   const content = `
     <h1 style="font-size:24px;margin:0 0 6px">¡Tus entradas están listas!</h1>
     <p style="margin:0 0 20px;color:#555;font-size:15px;line-height:1.5">
@@ -68,13 +71,15 @@ export async function ticketsEmail({ order, event, tickets, secret, publicUrl })
       <tr><td style="padding:10px 0;border-top:1px solid #e6e6ee;font-weight:bold">Total cobrado</td>
           <td align="right" style="padding:10px 0;border-top:1px solid #e6e6ee;font-weight:bold">${euros(order.total)}</td></tr>
     </table>
-    <p style="font-size:14px;line-height:1.6;color:#555">Este importe corresponde a un pago único. No hay cuotas posteriores ni renovación automática.</p>`;
+    <p style="font-size:14px;line-height:1.6;color:#555">${paymentNote}</p>`;
   const html = layout('Tus entradas', content, publicUrl);
 
   const text = [
     `Tus entradas para ${event.title} (${fecha(event.date)}, ${event.venue} · ${event.city}).`,
     `Pedido ${code}. Total cobrado: ${euros(order.total)}.`,
-    'La compra es un pago único, sin cuotas posteriores ni renovación automática.',
+    order.monthlyTotal > 0
+      ? `Este cobro corresponde a las entradas. Tu suscripción mensual de ${euros(order.monthlyTotal)} se gestiona por separado y se renueva automáticamente hasta que la canceles.`
+      : 'La compra es un pago único, sin cuotas posteriores ni renovación automática.',
     'Los códigos QR de tus entradas están en la versión HTML de este email.',
   ].filter(Boolean).join('\n');
 
