@@ -76,7 +76,7 @@ function updateBuybar() {
   document.getElementById('buy-count').textContent = `${count} ${count === 1 ? 'entrada' : 'entradas'}`;
   document.getElementById('buy-total').textContent = `Hoy ${euros(total)}`;
   document.getElementById('buy-entries').textContent = count ? `Entradas: ${euros(total)}` : '';
-  document.getElementById('buy-monthly').textContent = count ? `Suscripción: ${euros(event.monthlyPrice)}/mes · primer cobro el próximo día 2` : '';
+  document.getElementById('buy-monthly').textContent = '';
   buyButton.disabled = count === 0;
 }
 

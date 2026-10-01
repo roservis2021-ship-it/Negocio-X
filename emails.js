@@ -36,7 +36,6 @@ function layout(title, content, publicUrl) {
 // Email con las entradas (un QR por entrada) y el resumen del pago.
 export async function ticketsEmail({ order, event, tickets, secret, publicUrl }) {
   const code = order.id.slice(0, 8).toUpperCase();
-  const manageUrl = `${publicUrl}/suscripcion?order=${encodeURIComponent(order.id)}`;
   const attachments = [];
   const ticketBlocks = [];
   for (const t of tickets) {
@@ -66,19 +65,16 @@ export async function ticketsEmail({ order, event, tickets, secret, publicUrl })
     <h2 style="font-size:16px;margin:24px 0 8px">Resumen del pago · Pedido ${code}</h2>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;border-top:1px solid #e6e6ee">
       ${lines}
-      <tr><td style="padding:8px 0;border-top:1px solid #e6e6ee">Suscripción mensual (primer cobro el próximo día 2)</td>
-          <td align="right" style="padding:8px 0;border-top:1px solid #e6e6ee">${euros(order.monthlyTotal)}/mes</td></tr>
-      <tr><td style="padding:10px 0;border-top:1px solid #e6e6ee;font-weight:bold">Total cobrado hoy</td>
+      <tr><td style="padding:10px 0;border-top:1px solid #e6e6ee;font-weight:bold">Total cobrado</td>
           <td align="right" style="padding:10px 0;border-top:1px solid #e6e6ee;font-weight:bold">${euros(order.total)}</td></tr>
-    </table>`;
-  const subscriptionInfo = `<h2 style="font-size:16px;margin:24px 0 8px">Tu suscripción</h2>
-    <p style="font-size:14px;line-height:1.6;color:#555">Hoy se ha cobrado solo el importe de las entradas. La primera cuota de <b>${euros(order.monthlyTotal)}</b> se cobrará el próximo día 2 disponible y después se renovará automáticamente cada día 2 hasta que la canceles. Si la compra se realiza el día 1, la primera cuota puede cobrarse al día siguiente. Beneficios: ${esc(order.subscriptionBenefits || 'los indicados en la página del evento')}. Puedes gestionar el método de pago o cancelar desde <a href="${manageUrl}" style="color:#5e52d7">este enlace seguro</a>; te pediremos confirmar el email de compra.</p>`;
-  const html = layout('Tus entradas', `${content}${subscriptionInfo}`, publicUrl);
+    </table>
+    <p style="font-size:14px;line-height:1.6;color:#555">Este importe corresponde a un pago único. No hay cuotas posteriores ni renovación automática.</p>`;
+  const html = layout('Tus entradas', content, publicUrl);
 
   const text = [
     `Tus entradas para ${event.title} (${fecha(event.date)}, ${event.venue} · ${event.city}).`,
     `Pedido ${code}. Total cobrado: ${euros(order.total)}.`,
-    `Hoy se han cobrado solo las entradas. La suscripción de ${euros(order.monthlyTotal)}/mes se cobrará por primera vez el próximo día 2 disponible y se renovará cada día 2 hasta cancelar. Gestiona o cancela: ${manageUrl}`,
+    'La compra es un pago único, sin cuotas posteriores ni renovación automática.',
     'Los códigos QR de tus entradas están en la versión HTML de este email.',
   ].filter(Boolean).join('\n');
 

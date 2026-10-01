@@ -384,7 +384,7 @@ app.get('/api/orders/:id', async (req, res) => {
 });
 
 // Crea una sesión Stripe para cobrar las entradas y guardar el método de pago
-// que se usará en la suscripción mensual autorizada por el cliente.
+// que se usará para completar el pago único autorizado por el cliente.
 app.post('/api/orders/:id/checkout-session', strictLimit, async (req, res) => {
   if (!SALES_ENABLED) return res.status(503).json({ error: 'Las ventas todavía no están activas.' });
   const order = await payableOrder(req);
@@ -397,7 +397,7 @@ app.post('/api/orders/:id/checkout-session', strictLimit, async (req, res) => {
 // Portal de Stripe para gestionar el método de pago o cancelar la renovación.
 app.post('/api/orders/:id/customer-portal', strictLimit, async (req, res) => {
   const order = await db.getOrder(req.params.id);
-  if (!order || order.status !== 'paid') throw new HttpError(404, 'Pedido o suscripción no encontrados');
+  if (!order || order.status !== 'paid') throw new HttpError(404, 'Pedido no encontrado');
   const email = String(req.body?.email || '').trim().toLowerCase();
   if (!EMAIL.test(email) || email !== String(order.email || '').toLowerCase()) throw new HttpError(403, 'El email no coincide con el de la compra');
   res.json({ url: await billing.portalFor(order, PUBLIC_URL) });
