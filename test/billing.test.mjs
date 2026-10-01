@@ -73,7 +73,7 @@ test('creates a monthly subscription with a Stripe product after ticket payment'
   assert.equal('product_data' in calls.subscription.payload.items[0].price_data, false);
   assert.equal(
     calls.subscription.payload.trial_end,
-    Date.UTC(2026, 9, 2, 15, 15, 0) / 1000,
+    Date.UTC(2026, 9, 1, 23, 5, 0) / 1000,
   );
   assert.deepEqual(calls.subscription.options, {
     idempotencyKey: 'subscription-order-v2-order-1',
@@ -121,6 +121,6 @@ test('uses the following month when payment happens on billing day', async () =>
 
   assert.equal(
     subscriptionPayload.trial_end,
-    Date.UTC(2026, 10, 2, 10, 0, 0) / 1000,
+    Date.UTC(2026, 10, 2, 0, 5, 0) / 1000,
   );
 });

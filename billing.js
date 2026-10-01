@@ -50,7 +50,7 @@ export function createBilling(stripe) {
     if (!paymentMethodId) throw new Error('No se pudo guardar el método de pago para la suscripción.');
 
     const paidAt = new Date((session.created || Math.floor(Date.now() / 1000)) * 1000);
-    const firstChargeAt = nextMonthlyBillingDay(paidAt, 2);
+    const firstChargeAt = nextMonthlyBillingDay(paidAt, 2, 0, 5);
     // Stripe permite product_data al crear una sesión de Checkout, pero no al
     // crear directamente una suscripción. Creamos un producto estable por
     // evento y pasamos su ID en el price_data de la cuota mensual.
@@ -110,10 +110,44 @@ export function createBilling(stripe) {
   return { checkoutFor, checkPaid, expirePending, portalFor };
 }
 
-function nextMonthlyBillingDay(date, day) {
-  const next = new Date(date);
-  next.setUTCDate(1);
-  next.setUTCDate(day);
-  if (next <= date) next.setUTCMonth(next.getUTCMonth() + 1);
+function nextMonthlyBillingDay(date, day, hour, minute) {
+  const timeZone = 'Atlantic/Canary';
+  const current = partsInTimeZone(date, timeZone);
+  let year = current.year;
+  let month = current.month;
+  let next = dateInTimeZone(year, month, day, hour, minute, timeZone);
+  if (next <= date) {
+    month += 1;
+    if (month === 13) { month = 1; year += 1; }
+    next = dateInTimeZone(year, month, day, hour, minute, timeZone);
+  }
   return next;
+}
+
+function partsInTimeZone(date, timeZone) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hourCycle: 'h23',
+  }).formatToParts(date);
+  return Object.fromEntries(parts.filter(({ type }) => type !== 'literal').map(({ type, value }) => [type, Number(value)]));
+}
+
+function dateInTimeZone(year, month, day, hour, minute, timeZone) {
+  const utcGuess = Date.UTC(year, month - 1, day, hour, minute);
+  const guessParts = partsInTimeZone(new Date(utcGuess), timeZone);
+  const representedAsUtc = Date.UTC(
+    guessParts.year,
+    guessParts.month - 1,
+    guessParts.day,
+    guessParts.hour,
+    guessParts.minute,
+    guessParts.second,
+  );
+  return new Date(utcGuess - (representedAsUtc - utcGuess));
 }
