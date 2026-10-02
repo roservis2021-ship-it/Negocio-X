@@ -4,7 +4,7 @@
     "title": "University Halloween XL 2026",
     "published": true,
     "saleEnabled": true,
-    "monthlyPrice": 99,
+    "monthlyPrice": 11200,
     "subscriptionBenefits": "Compra única de entradas para este evento, sin cuotas posteriores ni renovación automática.",
     "date": "2026-10-31T22:00:00+00:00",
     "venue": "Anexo C.C. Las Terrazas",
@@ -17,7 +17,7 @@
         "id": "general",
         "name": "General",
         "description": "Acceso al evento",
-        "price": 99,
+        "price": 3500,
         "capacity": 120
       }
     ]
@@ -27,7 +27,7 @@
     "title": "ROW Tenerife XXL 2026",
     "published": true,
     "saleEnabled": true,
-    "monthlyPrice": 99,
+    "monthlyPrice": 11200,
     "subscriptionBenefits": "Compra única de entradas para este evento, sin cuotas posteriores ni renovación automática.",
     "date": "2026-10-10",
     "venue": "Campo de Golf Costa Adeje",
@@ -40,7 +40,7 @@
         "id": "general",
         "name": "Entrada",
         "description": "Acceso al evento",
-        "price": 99,
+        "price": 6000,
         "capacity": 120
       }
     ]
